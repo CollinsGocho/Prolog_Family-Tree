@@ -1,0 +1,188 @@
+% ============================================
+% BASIC FAMILY TREE
+% ============================================
+
+% Facts - Gender
+male(john).
+male(robert).
+male(michael).
+male(david).
+
+female(susan).
+female(linda).
+female(mary).
+female(sarah).
+
+% Facts - Parent relationships
+parent(john, michael).
+parent(susan, michael).
+parent(john, linda).
+parent(susan, linda).
+parent(michael, david).
+parent(linda, mary).
+parent(robert, sarah).
+parent(mary, sarah).
+
+% Rules
+father(Father, Child) :- male(Father), parent(Father, Child).
+mother(Mother, Child) :- female(Mother), parent(Mother, Child).
+grandparent(GP, Grandchild) :- parent(GP, X), parent(X, Grandchild).
+sibling(X, Y) :- parent(P, X), parent(P, Y), X \= Y.
+brother(Brother, Person) :- male(Brother), sibling(Brother, Person).
+sister(Sister, Person) :- female(Sister), sibling(Sister, Person).
+
+
+% ============================================
+% MY COMPLETE FAMILY TREE
+% Contains: Grandparents, Parents, Children,
+%           Grandchildren, Cousins, Uncles, Aunts
+% ============================================
+
+% ========== GENDER FACTS ==========
+% Grandparents
+male(james).
+male(robert).
+male(thomas).
+male(george).
+male(peter).
+male(mark).
+male(johnny).
+
+% Grandparents
+female(mary).
+female(helen).
+female(patricia).
+female(susan).
+female(linda).
+female(emma).
+female(sophia).
+
+% ========== PARENT RELATIONSHIPS ==========
+% Generation 1: Grandparents
+parent(james, thomas).
+parent(mary, thomas).
+parent(james, george).
+parent(mary, george).
+parent(james, susan).
+parent(mary, susan).
+
+parent(robert, patricia).
+parent(helen, patricia).
+parent(robert, peter).
+parent(helen, peter).
+parent(robert, linda).
+parent(helen, linda).
+
+% Generation 2: Parents (producing children)
+parent(thomas, mark).
+parent(patricia, mark).
+parent(thomas, emma).
+parent(patricia, emma).
+
+parent(george, johnny).
+parent(susan, johnny).
+
+parent(peter, sophia).
+parent(linda, sophia).
+
+% ========== RULES ==========
+
+% Basic relationships
+father(Father, Child) :- male(Father), parent(Father, Child).
+mother(Mother, Child) :- female(Mother), parent(Mother, Child).
+
+% Grandparents
+grandparent(GP, Grandchild) :- parent(GP, X), parent(X, Grandchild).
+
+% Siblings (share at least one parent)
+sibling(X, Y) :- parent(P, X), parent(P, Y), X \= Y.
+
+% Children
+child(Child, Parent) :- parent(Parent, Child).
+
+% Grandchildren
+grandchild(Child, Grandparent) :- grandparent(Grandparent, Child).
+
+% Uncles (brother of one's parent)
+uncle(Uncle, Person) :- 
+    male(Uncle),
+    parent(Parent, Person),
+    sibling(Uncle, Parent).
+
+% Aunts (sister of one's parent)
+aunt(Aunt, Person) :-
+    female(Aunt),
+    parent(Parent, Person),
+    sibling(Aunt, Parent).
+
+% Cousins (children of siblings)
+cousin(Cousin1, Cousin2) :-
+    parent(P1, Cousin1),
+    parent(P2, Cousin2),
+    sibling(P1, P2),
+    Cousin1 \= Cousin2.
+
+% First cousins (share grandparents)
+first_cousin(C1, C2) :-
+    grandparent(GP, C1),
+    grandparent(GP, C2),
+    C1 \= C2,
+    \+ sibling(C1, C2).
+
+% Descendants
+descendant(Descendant, Ancestor) :- parent(Ancestor, Descendant).
+descendant(Descendant, Ancestor) :- parent(Ancestor, X), descendant(Descendant, X).
+
+% Ancestors
+ancestor(Ancestor, Descendant) :- descendant(Descendant, Ancestor).
+
+
+% ========== SAMPLE QUERIES (Copy these to test) ==========
+
+/*
+% Grandparents
+?- grandparent(james, mark).
+?- grandparent(X, sophia).
+
+% Parents
+?- parent(thomas, mark).
+?- father(thomas, emma).
+?- mother(patricia, mark).
+
+% Children
+?- child(mark, X).
+
+% Grandchildren
+?- grandchild(mark, X).
+
+% Siblings
+?- sibling(thomas, george).
+
+% Uncles
+?- uncle(george, mark).
+
+% Aunts
+?- aunt(susan, mark).
+
+% Cousins
+?- cousin(mark, johnny).
+?- cousin(emma, johnny).
+
+% First cousins
+?- first_cousin(mark, sophia).
+
+% Descendants
+?- descendant(james, X).
+
+% Ancestors
+?- ancestor(X, mark).
+
+% All children
+?- parent(Parent, Child).
+
+% Who is male?
+?- male(X).
+
+% Who is female?
+?- female(X).
+*/
