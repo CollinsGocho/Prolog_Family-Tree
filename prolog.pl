@@ -1,10 +1,8 @@
-% ============================================
 % COMPLETE FAMILY TREE
 % Contains: Grandparents, Parents, Children,
 %           Grandchildren, Cousins, Uncles, Aunts
-% ============================================
 
-% ========== GENDER FACTS ==========
+% GENDER FACTS
 % Grandparents
 male(james).
 male(robert).
@@ -23,7 +21,7 @@ female(linda).
 female(emma).
 female(sophia).
 
-% ========== PARENT RELATIONSHIPS ==========
+% PARENT RELATIONSHIPS
 % Generation 1: Grandparents
 parent(james, thomas).
 parent(mary, thomas).
@@ -51,7 +49,7 @@ parent(susan, johnny).
 parent(peter, sophia).
 parent(linda, sophia).
 
-% ========== BASIC RELATIONSHIP RULES ==========
+% BASIC RELATIONSHIP RULES
 
 % Father: male parent
 father(Father, Child) :- 
@@ -83,7 +81,7 @@ sister(Sister, Person) :-
     female(Sister), 
     sibling(Sister, Person).
 
-% ========== EXTENDED RELATIONSHIP RULES ==========
+% EXTENDED RELATIONSHIP RULES
 
 % Grandparent: parent of one's parent
 grandparent(GP, Grandchild) :- 
@@ -120,7 +118,7 @@ first_cousin(C1, C2) :-
     C1 \= C2,
     \+ sibling(C1, C2).
 
-% ========== ANCESTOR/DESCENDANT RULES ==========
+% ANCESTOR/DESCENDANT RULES
 
 % Descendant: direct child or child of descendant
 descendant(Descendant, Ancestor) :- 
@@ -133,6 +131,6 @@ descendant(Descendant, Ancestor) :-
 ancestor(Ancestor, Descendant) :- 
     descendant(Descendant, Ancestor).
 
-% ========== INTEGRITY CONSTRAINTS ==========
+% INTEGRITY CONSTRAINTS
 % Uncomment to enforce constraints:
 % :- male(X), female(X).  % No one can be both male and female
